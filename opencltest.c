@@ -8,7 +8,7 @@ const char* kernel_source =
   "  output[i] = input[i];"
   "}";
 
-#define SIZE (1024 * 100)
+#define SIZE (1024 * 1000)
 
 #define CHECK_STATUS(s) do { \
     cl_int ss = (s); \
@@ -65,13 +65,12 @@ int main() {
   float to[SIZE];
   CHECK_STATUS(clEnqueueReadBuffer(queue, output, CL_TRUE, 0, sizeof(float) * SIZE, to, 0, NULL, NULL));
 
-  //! Deliberately leak memory
-  // CHECK_STATUS(clReleaseMemObject(input));
-  // CHECK_STATUS(clReleaseMemObject(output));
-  // CHECK_STATUS(clReleaseKernel(kernel));
-  // CHECK_STATUS(clReleaseProgram(program));
-  // CHECK_STATUS(clReleaseCommandQueue(queue));
-  // CHECK_STATUS(clReleaseContext(context));
+  CHECK_STATUS(clReleaseMemObject(input));
+  CHECK_STATUS(clReleaseMemObject(output));
+  CHECK_STATUS(clReleaseKernel(kernel));
+  CHECK_STATUS(clReleaseProgram(program));
+  CHECK_STATUS(clReleaseCommandQueue(queue));
+  CHECK_STATUS(clReleaseContext(context));
 
   for (int i = 0; i < SIZE; ++i)
     if (from[i] != to[i])
